@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+# EXAMPLE: bin/dehenzify app/lib/stats
+require 'bundler/setup'
+require 'dehenzify'
+
+exit(1) if $ARGV[0].nil?
+
+dir = Pathname.new(Dir.pwd).join($ARGV[0])
+dir.glob('**/*.rb').each do |file_name|
+  parser = Parser::CurrentRuby.parse(File.read(file_name))
+  extractor = Dehenzify::ExtractClass.new
+  FileUtils.rm(file_name) if extractor.extract(dir, parser)
+end
+
+true
