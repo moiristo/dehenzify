@@ -20,6 +20,8 @@ Or install it yourself as:
 
 ## Usage example
 
+    $ bundle exec dehenzify test/fixtures/henzified_classes.rb
+
     $ bundle exec dehenzify app/lib/stats
 
 ## Contributing

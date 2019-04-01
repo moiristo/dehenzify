@@ -3,13 +3,23 @@
 require 'bundler/setup'
 require 'dehenzify'
 
-exit(1) if $ARGV[0].nil?
+file_or_path = ARGV[0]
 
-dir = Pathname.new(Dir.pwd).join($ARGV[0])
-dir.glob('**/*.rb').each do |file_name|
-  parser = Parser::CurrentRuby.parse(File.read(file_name))
-  extractor = Dehenzify::ExtractClass.new
-  FileUtils.rm(file_name) if extractor.extract(dir, parser)
+exit(1) if file_or_path.nil?
+
+files =
+  if file_or_path.end_with?('.rb')
+    [file_or_path]
+  else
+    Pathname.new(file_or_path).glob('**/*.rb')
+  end
+
+files.each do |file_path|
+  dehenzifier = Dehenzify::Dehenzifier.new(file_path)
+  extracted_sources = dehenzifier.run!
+  extracted_sources.each do |extracted_source|
+    extracted_source.write!
+  end
 end
 
-true
+exit(0)
