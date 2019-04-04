@@ -1,4 +1,6 @@
+require 'active_support/core_ext/object/blank.rb'
 require 'active_support/core_ext/string/inflections'
+
 require 'fileutils'
 require 'parser/current'
 

@@ -7,18 +7,26 @@ file_or_path = ARGV[0]
 
 exit(1) if file_or_path.nil?
 
+base_dir = nil
+
 files =
   if file_or_path.end_with?('.rb')
     [file_or_path]
   else
-    Pathname.new(file_or_path).glob('**/*.rb')
+    base_dir = Pathname.new(file_or_path)
+    base_dir.glob('**/*.rb')
   end
 
 files.each do |file_path|
   dehenzifier = Dehenzify::Dehenzifier.new(file_path)
-  extracted_sources = dehenzifier.run!
+  extracted_sources = dehenzifier.run!(base_dir: base_dir)
+
   extracted_sources.each do |extracted_source|
-    extracted_source.write!
+    if extracted_source.target_file_path != file_path.to_s || !extracted_source.empty?
+      extracted_source.write!
+    else
+      extracted_source.delete!
+    end
   end
 end
 

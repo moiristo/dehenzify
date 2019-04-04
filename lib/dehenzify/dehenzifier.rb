@@ -7,9 +7,9 @@ module Dehenzify
       self.file_name = file_name
     end
 
-    def run!
+    def run!(base_dir: nil)
       extractor = Dehenzify::Extractor.new
-      extractor.extract(file_name)
+      extractor.extract(file_name, base_dir: base_dir)
     end
   end
 end
